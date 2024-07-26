@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "Users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +23,6 @@ public class User {
     @Embedded
     private TwoFactorAuth twoFactorAuth = new TwoFactorAuth();
 
-    private USER_ROLE role =USER_ROLE.ROLE_CUSTOMER;
+    private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
 
 }
