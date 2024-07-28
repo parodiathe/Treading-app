@@ -7,7 +7,7 @@ public interface TwoFactorOtpService {
 
     TwoFactorOTP createTwoFactorOtp(User user, String otp, String jwt);
 
-    TwoFactorOTP findByUser(Long user);
+    TwoFactorOTP findByUser(Long userId);
 
     TwoFactorOTP findById(String id);
 
