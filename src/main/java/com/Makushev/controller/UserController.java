@@ -1,15 +1,24 @@
 package com.Makushev.controller;
 
 import com.Makushev.domain.VerificationType;
+import com.Makushev.model.ForgotPasswordToken;
 import com.Makushev.model.User;
 import com.Makushev.model.VerificationCode;
+import com.Makushev.requests.ForgotPasswordTokenRequest;
+import com.Makushev.requests.ResetPasswordRequest;
+import com.Makushev.response.ApiResponse;
+import com.Makushev.response.AuthResponse;
 import com.Makushev.service.EmailService;
+import com.Makushev.service.ForgotPasswordService;
 import com.Makushev.service.UserService;
 import com.Makushev.service.VerificationCodeService;
+import com.Makushev.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -20,18 +29,21 @@ public class UserController {
 
     private VerificationCodeService verificationCodeService;
 
-    @Autowired
-    public UserController(UserService userService, EmailService emailService, VerificationCodeService verificationCodeService) {
+    private ForgotPasswordService forgotPasswordService;
+
+     @Autowired
+    public UserController(UserService userService, EmailService emailService, VerificationCodeService verificationCodeService, ForgotPasswordService forgotPasswordService) {
         this.userService = userService;
         this.emailService = emailService;
         this.verificationCodeService = verificationCodeService;
+        this.forgotPasswordService = forgotPasswordService;
     }
 
     @GetMapping("/api/users/profile")
     public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserProfileByJwt(jwt);
 
-        return new ResponseEntity<User>(user, HttpStatus.OK)
+        return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
     @PostMapping("/api/users/verification/{verificationType}/send-otp")
@@ -77,6 +89,57 @@ public class UserController {
                     return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         }
         throw new Exception("wrong otp");
+    }
+
+    @PostMapping("/auth/users/reset-password/send-otp")
+    public ResponseEntity<AuthResponse> sendForgotPasswordOtp(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody ForgotPasswordTokenRequest req) throws Exception {
+
+
+        User user = userService.findUserByEmail(req.getSendTo());
+        String otp = OtpUtils.generateOTP();
+        UUID uuid = UUID.randomUUID();
+        String id = uuid.toString();
+
+        ForgotPasswordToken token = forgotPasswordService.findByUser(user.getId());
+
+        if(token==null){
+            token = forgotPasswordService.createToken(user, id,otp, req.getVerificationType(), req.getSendTo());
+        }
+
+        if(req.getVerificationType().equals(VerificationType.EMAIL)){
+            emailService.sendVerificationOtpEmail(
+                    user.getEmail(),
+                    token.getOtp());
+        }
+
+        AuthResponse response = new AuthResponse();
+        response.setSession(token.getId());
+        response.setMessage("Password reset otp sent successfully");
+
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/auth/users/reset-password/verify-otp")
+    public ResponseEntity<ApiResponse> resetPassword(
+            @RequestParam String id,
+            @RequestBody ResetPasswordRequest req,
+            @RequestHeader("Authorization") String jwt) throws Exception {
+
+        ForgotPasswordToken forgotPasswordToken = forgotPasswordService.findById(id);
+
+        boolean isVerified = forgotPasswordToken.getOtp().equals(req.getOtp());
+
+        if(isVerified){
+            userService.updatePassword(forgotPasswordToken.getUser(), req.getPassword());
+            ApiResponse res = new ApiResponse();
+            res.setMessage("password update successfully");
+            return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
+        }
+        throw  new Exception("wrong otp");
+
     }
 
 
