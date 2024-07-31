@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "forgotpassword_token")
 public class ForgotPasswordToken {
 
     @Id

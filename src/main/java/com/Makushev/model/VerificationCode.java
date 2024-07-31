@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "verification_code")
 public class VerificationCode {
 
     @Id
