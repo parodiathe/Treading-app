@@ -4,6 +4,7 @@ import com.Makushev.model.Order;
 import com.Makushev.model.User;
 import com.Makushev.model.Wallet;
 import com.Makushev.model.WalletTransaction;
+import com.Makushev.service.OrderService;
 import com.Makushev.service.UserService;
 import com.Makushev.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ public class WalletController {
 
     private WalletService walletService;
     private UserService userService;
+    private OrderService orderService;
 
     @Autowired
-    public WalletController(WalletService walletService, UserService userService) {
+    public WalletController(WalletService walletService, UserService userService, OrderService orderService) {
         this.walletService = walletService;
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/api/wallet")
