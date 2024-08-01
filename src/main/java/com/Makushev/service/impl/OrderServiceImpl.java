@@ -1,13 +1,13 @@
-package com.Makushev.service;
+package com.Makushev.service.impl;
 
 import com.Makushev.domain.OrderStatus;
 import com.Makushev.domain.OrderType;
-import com.Makushev.model.Coin;
-import com.Makushev.model.Order;
-import com.Makushev.model.OrderItem;
-import com.Makushev.model.User;
+import com.Makushev.model.*;
 import com.Makushev.repository.OrderItemRepository;
 import com.Makushev.repository.OrderRepository;
+import com.Makushev.service.AssetService;
+import com.Makushev.service.OrderService;
+import com.Makushev.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +22,14 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
     private WalletService walletService;
     private OrderItemRepository orderItemRepository;
+    private AssetService assetService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, WalletService walletService, OrderItemRepository orderItemRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, WalletService walletService, OrderItemRepository orderItemRepository, AssetService assetService) {
         this.orderRepository = orderRepository;
         this.walletService = walletService;
         this.orderItemRepository = orderItemRepository;
+        this.assetService = assetService;
     }
 
     @Override
@@ -89,6 +91,18 @@ public class OrderServiceImpl implements OrderService {
 
         //create asset
 
+        Asset oldAsset = assetService.findAssetByUserIdAndCoinId(
+                order.getUser().getId(),
+                order.getOrderItem().getCoin().getId());
+
+        if(oldAsset == null){
+            assetService.createAsset(user, orderItem.getCoin(), orderItem.getQuantity());
+        }
+        else{
+            assetService.updateAsset(oldAsset.getId(), quantity);
+        }
+
+
         return savedOrder;
     }
 
@@ -99,29 +113,42 @@ public class OrderServiceImpl implements OrderService {
         }
         double sellPrice = coin.getCurrentPrice();
 
-        double buyPrice = assetToSell.getPrice();
+        Asset assetToSell = assetService.findAssetByUserIdAndCoinId(
+                user.getId(),
+                coin.getId());
 
-        OrderItem orderItem = createOrderItem(coin, quantity, buyPrice, sellPrice);
+        double buyPrice = assetToSell.getBuyPrice();
 
-        Order order = createOrder(user, orderItem, OrderType.SELL);
-        orderItem.setOrder(order);
+        if(assetToSell != null) {
+            OrderItem orderItem = createOrderItem(
+                    coin,
+                    quantity,
+                    buyPrice,
+                    sellPrice);
 
-        if(assetToSell.getQuantity()>=quantity){
+            Order order = createOrder(user, orderItem, OrderType.SELL);
+            orderItem.setOrder(order);
 
-            order.setStatus(OrderStatus.SUCCESS);
-            order.setOrderType(OrderType.SELL);
-            Order savedOrder = orderRepository.save(order);
+            if (assetToSell.getQuantity() >= quantity) {
 
-            walletService.payOrderPayment(order, user);
+                order.setStatus(OrderStatus.SUCCESS);
+                order.setOrderType(OrderType.SELL);
+                Order savedOrder = orderRepository.save(order);
 
-            Asset updatedAsset = assetService.updateAsset(assetToSell.getId(),-quantity); //  //create asset
-            if(updatedAsset.getQuantity()*coin.getCurrentPrice()<=1){
-                assetService.deleteAsset(updatedAsset.getId);
+                walletService.payOrderPayment(order, user);
+
+                Asset updatedAsset = assetService.updateAsset(
+                        assetToSell.getId(), -quantity
+                );
+
+                if (updatedAsset.getQuantity() * coin.getCurrentPrice() <= 1) {
+                    assetService.deleteAsset(updatedAsset.getId());
+                }
+                return savedOrder;
             }
-            return savedOrder;
+            throw new Exception("Insufficient quantity to sell");
         }
-        throw new Exception("Insufficient quantity to sell");
-
+        throw new Exception("Asset not found");
     }
 
     @Override
