@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/treading_db
@@ -15,3 +16,12 @@ spring:
         format_sql: true
   freemarker:
     expose-request-attributes: true
+
+stripe:
+  api:
+    key: "stripe key"
+
+razorpay:
+  api:
+    key: "razorpay api key"
+    secret: "razorpay api secret"
