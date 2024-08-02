@@ -58,7 +58,7 @@ public class WithdrawalController {
             walletService.addBalanceToWallet(userWallet, withdrawal.getAmount());
         }
 
-        return new ResponseEntity<>(withdrawal, HttpStatus.OK)
+        return new ResponseEntity<>(withdrawal, HttpStatus.OK);
 
     }
 
