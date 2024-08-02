@@ -6,8 +6,6 @@ import com.Makushev.model.User;
 import com.Makushev.response.PaymentResponse;
 import com.Makushev.service.PaymentService;
 import com.Makushev.service.UserService;
-import com.razorpay.RazorpayException;
-import com.stripe.exception.StripeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +30,7 @@ public class PaymentController {
             @PathVariable PaymentMethod paymentMethod,
             @PathVariable Long amount,
             @RequestHeader("Authorization") String jwt) throws
-            Exception,
-            RazorpayException,
-            StripeException {
+            Exception{
 
         User user = userService.findUserProfileByJwt(jwt);
 
