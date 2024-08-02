@@ -8,6 +8,7 @@ import com.Makushev.response.AuthResponse;
 import com.Makushev.service.CustomUserDetailsService;
 import com.Makushev.service.EmailService;
 import com.Makushev.service.TwoFactorOtpService;
+import com.Makushev.service.WatchlistService;
 import com.Makushev.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,13 +28,15 @@ public class AuthController {
     private CustomUserDetailsService customUserDetailsService;
     private TwoFactorOtpService twoFactorOtpService;
     private EmailService emailService;
+    private WatchlistService watchlistService;
 
     @Autowired
-    public AuthController(UserRepository userRepository, CustomUserDetailsService customUserDetailsService, TwoFactorOtpService twoFactorOtpService, EmailService emailService) {
+    public AuthController(UserRepository userRepository, CustomUserDetailsService customUserDetailsService, TwoFactorOtpService twoFactorOtpService, EmailService emailService, WatchlistService watchlistService) {
         this.userRepository = userRepository;
         this.customUserDetailsService = customUserDetailsService;
         this.twoFactorOtpService = twoFactorOtpService;
         this.emailService = emailService;
+        this.watchlistService = watchlistService;
     }
 
     @PostMapping("/signup")
@@ -52,6 +55,8 @@ public class AuthController {
         newUser.setEmail(user.getEmail());
 
         User savedUser = userRepository.save(newUser);
+
+        watchlistService.createWatchlist(savedUser);
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
