@@ -1,10 +1,9 @@
 package com.Makushev.controller;
 
-import com.Makushev.model.Order;
-import com.Makushev.model.User;
-import com.Makushev.model.Wallet;
-import com.Makushev.model.WalletTransaction;
+import com.Makushev.model.*;
+import com.Makushev.response.PaymentResponse;
 import com.Makushev.service.OrderService;
+import com.Makushev.service.PaymentService;
 import com.Makushev.service.UserService;
 import com.Makushev.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,14 @@ public class WalletController {
     private WalletService walletService;
     private UserService userService;
     private OrderService orderService;
+    private PaymentService paymentService;
 
     @Autowired
-    public WalletController(WalletService walletService, UserService userService, OrderService orderService) {
+    public WalletController(WalletService walletService, UserService userService, OrderService orderService, PaymentService paymentService) {
         this.walletService = walletService;
         this.userService = userService;
         this.orderService = orderService;
+        this.paymentService = paymentService;
     }
 
     @GetMapping("/api/wallet")
@@ -63,6 +64,29 @@ public class WalletController {
 
         return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
     }
+
+    @PutMapping("/api/wallet/deposite")
+    public ResponseEntity<Wallet> addBalanceToWallet(
+            @RequestHeader("Authorization") String jwt,
+            @RequestParam(name = "order_id") Long orderId,
+            @RequestParam(name = "payment_id") String paymentid) throws Exception {
+
+        User user = userService.findUserProfileByJwt(jwt);
+
+        Wallet wallet = walletService.getUserWallet(user);
+
+        PaymentOrder order = paymentService.getPaymentOrderById(orderId);
+
+        Boolean status = paymentService.ProcessedPaymentOrder(order, paymentid);
+
+        if(status){
+            wallet = walletService.addBalanceToWallet(wallet, order.getAmount());
+        }
+
+        return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
+    }
+
+
 
 
 }
