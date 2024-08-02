@@ -61,7 +61,7 @@ public class CoinController {
 
     @GetMapping("/treading")
     ResponseEntity<JsonNode> getTreadingCoin() throws Exception {
-        String coin = coinService.getTreadingCoins();
+        String coin = coinService.getTrendingCoins();
         JsonNode jsonNode = objectMapper.readTree(coin);
 
         return ResponseEntity.ok(jsonNode);
