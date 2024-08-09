@@ -23,5 +23,5 @@ stripe:
 
 razorpay:
   api:
-    key: "razorpay api key"
-    secret: "razorpay api secret"
+    key: "rzp_test_u1rN0IiCslydoM"
+    secret: "4asBnOLmH9P0fXtHGrm9KSCN"
