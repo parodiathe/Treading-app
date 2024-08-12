@@ -20,6 +20,7 @@ public class WithdrawalController {
     private WithdrawalService withdrawalService;
     private WalletService walletService;
     private UserService userService;
+//    private TransactionSer
 
     @Autowired
     public WithdrawalController(WithdrawalService withdrawalService, WalletService walletService, UserService userService) {
@@ -28,7 +29,7 @@ public class WithdrawalController {
         this.userService = userService;
     }
 
-
+    @PostMapping("/api/withdrawal/{amount}")
     public ResponseEntity<?> withdrawalRequest(
             @PathVariable Long amount,
             @RequestHeader("Authorization") String jwt) throws Exception {
@@ -38,6 +39,8 @@ public class WithdrawalController {
 
         Withdrawal withdrawal = withdrawalService.requestyWithdrawal(amount, user);
         walletService.addBalanceToWallet(userWallet, -withdrawal.getAmount());
+
+//        WalletTransaction walletTransaction = walletT
 
         return new ResponseEntity<>(withdrawal, HttpStatus.OK);
     }

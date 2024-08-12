@@ -19,7 +19,8 @@ spring:
 
 stripe:
   api:
-    key: "stripe key"
+    publishableKey: "pk_test_51PmLzsGpqkpFM9QplsoarZ4R1j8nybp1XnKVI8D0IDVMuXpLAbRRtW377wktxSkEZf4gjESSfrEqqBOCnVvNAIzd00cGbW7HuR"
+    secretKey: "sk_test_51PmLzsGpqkpFM9Qp5ECdqIKfFZvsJnQwi7RY2XWmWSLPu17nzJ4tPnDJbM9apYtfm6lOPilYGiIpN8VbJ13EN9hx00l0CIedvO"
 
 razorpay:
   api:

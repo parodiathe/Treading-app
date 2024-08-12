@@ -30,7 +30,7 @@ public class PaymentDetailsController {
         User user = userService.findUserProfileByJwt(jwt);
 
         PaymentDetails paymentDetails = paymentDetailsService.addPaymentDetails(
-                paymentDetailsRequest.getAccountNubmer(),
+                paymentDetailsRequest.getAccountNumber(),
                 paymentDetailsRequest.getAccountHolderName(),
                 paymentDetailsRequest.getIfsc(),
                 paymentDetailsRequest.getBankName(),
@@ -39,6 +39,7 @@ public class PaymentDetailsController {
         return new ResponseEntity<>(paymentDetails, HttpStatus.CREATED);
     }
 
+    @GetMapping("/payment-details")
     public ResponseEntity<PaymentDetails> getUsersPaymentDetails(
             @RequestHeader("Authorization") String jwt) throws Exception {
 

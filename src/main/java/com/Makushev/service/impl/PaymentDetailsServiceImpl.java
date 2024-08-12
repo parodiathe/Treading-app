@@ -6,6 +6,8 @@ import com.Makushev.repository.PaymentDetailsRepository;
 import com.Makushev.service.PaymentDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Service
 public class PaymentDetailsServiceImpl implements PaymentDetailsService {
@@ -19,6 +21,7 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
 
 
 
+    @PostMapping("/payment-details")
     @Override
     public PaymentDetails addPaymentDetails (String accountNumber,
                                              String accountHolderName,
@@ -29,7 +32,7 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
 
         PaymentDetails paymentDetails = new PaymentDetails();
 
-        paymentDetails.setAccountNubmer(accountNumber);
+        paymentDetails.setAccountNumber(accountNumber);
         paymentDetails.setAccountHolderName(accountHolderName);
         paymentDetails.setIfsc(ifsc);
         paymentDetails.setBankName(bankName);
@@ -38,6 +41,7 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
         return paymentDetailsRepository.save(paymentDetails);
     }
 
+    @GetMapping("/payment-details")
     @Override
     public PaymentDetails getUsersPaymentDetails(User user) {
 

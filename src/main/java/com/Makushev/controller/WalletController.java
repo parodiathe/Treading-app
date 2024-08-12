@@ -66,7 +66,7 @@ public class WalletController {
         return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/api/wallet/deposite")
+    @PutMapping("/api/wallet/deposit")
     public ResponseEntity<Wallet> addBalanceToWallet(
             @RequestHeader("Authorization") String jwt,
             @RequestParam(name = "order_id") Long orderId,

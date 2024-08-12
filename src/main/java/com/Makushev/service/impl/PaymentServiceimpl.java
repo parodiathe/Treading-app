@@ -31,7 +31,10 @@ public class PaymentServiceimpl implements PaymentService {
         this.paymentOrderRepository = paymentOrderRepository;
     }
 
-    @Value("${stripe.api.key}")
+    @Value("${stripe.api.publishableKey}")
+    private String stripePublishedKey;
+
+    @Value("${stripe.api.secretKey}")
     private String stripeSecretKey;
 
     @Value("${razorpay.api.key}")

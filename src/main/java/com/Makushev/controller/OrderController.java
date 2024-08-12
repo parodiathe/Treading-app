@@ -67,7 +67,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping()
+    @GetMapping() // по api/orders поиск
     public ResponseEntity<List<Order>> getAllOrdersForUser(
             @RequestHeader("Authorization") String jwt,
             @RequestParam(required = false) OrderType order_type,
