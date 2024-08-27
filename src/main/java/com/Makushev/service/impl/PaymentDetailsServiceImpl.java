@@ -25,7 +25,7 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
     @Override
     public PaymentDetails addPaymentDetails (String accountNumber,
                                              String accountHolderName,
-                                             String ifsc,
+                                             String inn,
                                              String bankName,
                                              User user)
     {
@@ -34,7 +34,7 @@ public class PaymentDetailsServiceImpl implements PaymentDetailsService {
 
         paymentDetails.setAccountNumber(accountNumber);
         paymentDetails.setAccountHolderName(accountHolderName);
-        paymentDetails.setIfsc(ifsc);
+        paymentDetails.setInn(inn);
         paymentDetails.setBankName(bankName);
         paymentDetails.setUser(user);
 

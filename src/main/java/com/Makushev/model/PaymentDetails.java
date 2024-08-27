@@ -16,7 +16,7 @@ public class PaymentDetails {
 
     private String accountHolderName;
 
-    private String ifsc;
+    private String inn;
 
     private String bankName;
 

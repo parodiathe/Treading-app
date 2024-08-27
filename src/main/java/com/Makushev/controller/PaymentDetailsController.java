@@ -35,7 +35,7 @@ public class PaymentDetailsController {
         PaymentDetails paymentDetails = paymentDetailsService.addPaymentDetails(
                 paymentDetailsRequest.getAccountNumber(),
                 paymentDetailsRequest.getAccountHolderName(),
-                paymentDetailsRequest.getIfsc(),
+                paymentDetailsRequest.getInn(),
                 paymentDetailsRequest.getBankName(),
                 user
         );

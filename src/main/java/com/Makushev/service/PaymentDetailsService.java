@@ -7,7 +7,7 @@ public interface PaymentDetailsService {
 
     public PaymentDetails addPaymentDetails(String accountNumber,
                                             String accountHolderName,
-                                            String ifsc,
+                                            String inn,
                                             String bankName,
                                             User user);
 
