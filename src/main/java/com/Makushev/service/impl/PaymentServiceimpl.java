@@ -146,7 +146,7 @@ public class PaymentServiceimpl implements PaymentService {
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:8080/wallet?order_id=" + orderId)
+                .setSuccessUrl("http://localhost:5173/wallet?order_id=" + orderId)
                 .setCancelUrl("http://localhost:8080/payment/cancel")
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)

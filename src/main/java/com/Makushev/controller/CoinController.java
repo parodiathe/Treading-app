@@ -6,9 +6,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -74,4 +76,28 @@ public class CoinController {
 
         return ResponseEntity.ok(jsonNode);
     }
+
+//    @Override
+//    public String getTreadingCoins() throws Exception{
+//        String url = "https://api.coingecko.com/api/v3/search/trending";
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        try{
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.set("x-cg-demo-api-key", API_KEY);
+//
+//            HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+//
+//            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity);
+//
+//            return response.getBody();
+//        }
+//        catch (HttpClientErrorException | HttpServerErrorException e){
+//            throw new Exception(e.getMessage());
+//        }
+//    }
+
+
 }
+

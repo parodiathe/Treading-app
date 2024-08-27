@@ -3,6 +3,7 @@ package com.Makushev.service.impl;
 import com.Makushev.domain.OrderStatus;
 import com.Makushev.domain.OrderType;
 import com.Makushev.model.*;
+import com.Makushev.repository.AssetRepository;
 import com.Makushev.repository.OrderItemRepository;
 import com.Makushev.repository.OrderRepository;
 import com.Makushev.service.AssetService;
@@ -23,13 +24,15 @@ public class OrderServiceImpl implements OrderService {
     private WalletService walletService;
     private OrderItemRepository orderItemRepository;
     private AssetService assetService;
+    private AssetRepository assetRepository;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, WalletService walletService, OrderItemRepository orderItemRepository, AssetService assetService) {
+    public OrderServiceImpl(OrderRepository orderRepository, WalletService walletService, OrderItemRepository orderItemRepository, AssetService assetService, AssetRepository assetRepository) {
         this.orderRepository = orderRepository;
         this.walletService = walletService;
         this.orderItemRepository = orderItemRepository;
         this.assetService = assetService;
+        this.assetRepository = assetRepository;
     }
 
     @Override
@@ -99,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
             assetService.createAsset(user, orderItem.getCoin(), orderItem.getQuantity());
         }
         else{
-            assetService.updateAsset(oldAsset.getId(), quantity);
+            assetService.updateAsset(oldAsset.getId(), -quantity);
         }
 
 
@@ -108,8 +111,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public Order sellAsset(Coin coin, double quantity, User user) throws Exception {
-        if(quantity <= 0){
-            throw  new Exception("quantity should be > 0");
+        if (quantity <= 0) {
+            throw new Exception("Quantity should be > 0");
         }
         double sellPrice = coin.getCurrentPrice();
 
@@ -117,38 +120,44 @@ public class OrderServiceImpl implements OrderService {
                 user.getId(),
                 coin.getId());
 
+        if (assetToSell == null) {
+            throw new Exception("Asset not found");
+        }
+
         double buyPrice = assetToSell.getBuyPrice();
 
-        if(assetToSell != null) {
-            OrderItem orderItem = createOrderItem(
-                    coin,
-                    quantity,
-                    buyPrice,
-                    sellPrice);
-
-            Order order = createOrder(user, orderItem, OrderType.SELL);
-            orderItem.setOrder(order);
-
-            if (assetToSell.getQuantity() >= quantity) {
-
-                order.setStatus(OrderStatus.SUCCESS);
-                order.setOrderType(OrderType.SELL);
-                Order savedOrder = orderRepository.save(order);
-
-                walletService.payOrderPayment(order, user);
-
-                Asset updatedAsset = assetService.updateAsset(
-                        assetToSell.getId(), -quantity
-                );
-
-                if (updatedAsset.getQuantity() * coin.getCurrentPrice() <= 1) {
-                    assetService.deleteAsset(updatedAsset.getId());
-                }
-                return savedOrder;
-            }
+        if (assetToSell.getQuantity() < quantity) {
             throw new Exception("Insufficient quantity to sell");
         }
-        throw new Exception("Asset not found");
+
+        OrderItem orderItem = createOrderItem(
+                coin,
+                quantity,
+                buyPrice,
+                sellPrice);
+
+        Order order = createOrder(user, orderItem, OrderType.SELL);
+        orderItem.setOrder(order);
+
+        order.setStatus(OrderStatus.SUCCESS);
+        order.setOrderType(OrderType.SELL);
+        Order savedOrder = orderRepository.save(order);
+
+        walletService.payOrderPayment(order, user);
+        double newQuantity = assetToSell.getQuantity() - quantity;
+
+        if (newQuantity < 0) {
+            throw new Exception("Resulting asset quantity cannot be negative");
+        }
+
+        assetToSell.setQuantity(newQuantity);
+        Asset updatedAsset = assetRepository.save(assetToSell);
+
+
+        if (updatedAsset.getQuantity() * coin.getCurrentPrice() <= 1) {
+            assetService.deleteAsset(updatedAsset.getId());
+        }
+        return savedOrder;
     }
 
     @Override

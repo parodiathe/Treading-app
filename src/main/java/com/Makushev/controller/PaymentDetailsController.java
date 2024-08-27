@@ -2,6 +2,7 @@ package com.Makushev.controller;
 
 import com.Makushev.model.PaymentDetails;
 import com.Makushev.model.User;
+import com.Makushev.repository.PaymentDetailsRepository;
 import com.Makushev.service.PaymentDetailsService;
 import com.Makushev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,13 @@ public class PaymentDetailsController {
 
     private UserService userService;
     private PaymentDetailsService paymentDetailsService;
+    private PaymentDetailsRepository paymentDetailsRepository;
 
     @Autowired
-    public PaymentDetailsController(UserService userService, PaymentDetailsService paymentDetailsService) {
+    public PaymentDetailsController(UserService userService, PaymentDetailsService paymentDetailsService, PaymentDetailsRepository paymentDetailsRepository) {
         this.userService = userService;
         this.paymentDetailsService = paymentDetailsService;
+        this.paymentDetailsRepository = paymentDetailsRepository;
     }
 
     @PostMapping("/payment-details")
@@ -36,6 +39,8 @@ public class PaymentDetailsController {
                 paymentDetailsRequest.getBankName(),
                 user
         );
+
+
         return new ResponseEntity<>(paymentDetails, HttpStatus.CREATED);
     }
 
