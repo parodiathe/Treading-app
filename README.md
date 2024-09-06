@@ -1,5 +1,3 @@
-<img width="1440" alt="Снимок экрана 2024-09-07 в 02 52 41" src="https://github.com/user-attachments/assets/d457533f-eafc-4fe3-a184-c1672e15e85f"># My Crypto Trading Platform
-
 ## Project description
 CryptoTradePro is a cutting-edge cryptocurrency trading platform designed to provide a seamless and secure trading experience. With an intuitive adaptive interface, users can easily navigate through various trading options, monitor real-time market data, and execute trades efficiently.
 
