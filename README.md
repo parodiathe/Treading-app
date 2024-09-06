@@ -1,4 +1,4 @@
-# My Crypto Trading Platform
+<img width="1440" alt="Снимок экрана 2024-09-07 в 02 52 41" src="https://github.com/user-attachments/assets/d457533f-eafc-4fe3-a184-c1672e15e85f"># My Crypto Trading Platform
 
 ## Project description
 CryptoTradePro is a cutting-edge cryptocurrency trading platform designed to provide a seamless and secure trading experience. With an intuitive adaptive interface, users can easily navigate through various trading options, monitor real-time market data, and execute trades efficiently.
@@ -29,8 +29,25 @@ Backend:
 
     Stripe
 
+   API's:
+
+    CoinGecko API (https://docs.coingecko.com)
+
 
   ### Comprehensive Feature Set:
+
+- **Buy & Sell Crypto** : Facilitate smooth crypto transactions with a user-friendly buy and sell interface, supporting a wide array of cryptocurrencies.
+- **Wallet to Wallet Transfer**: Securely transfer funds between wallets.
+- **Withdrawal to Bank Account**: Directly withdraw funds to bank accounts.
+- **Add Balance to Wallet**: Easily top up wallet balances using this payment system.
+- **Login & Register**: Simple and secure user authentication.
+- **Two-Factor Authentication**: Extra layer of security for user accounts.
+- **Forgot Password**: Easy password recovery process.
+
+### Auth page
+
+
+
 
 
 
