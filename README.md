@@ -44,6 +44,44 @@ Backend:
 
 ### Auth page
 
+![Image alt](https://github.com/parodiathe/Treading-app/blob/main/auth-page-screenshot.png)
+
+### Main page
+
+![Image alt](https://github.com/parodiathe/Treading-app/blob/main/main-page-screenshot.png)
+
+### Coin page
+
+![Image alt](https://github.com/parodiathe/Treading-app/blob/main/coin-page-screenshot.png)
+
+### Trading page
+
+![Image alt](https://github.com/parodiathe/Treading-app/blob/main/trade-page-screenshot.png)
+
+### Activity page
+
+![Image alt](https://github.com/parodiathe/Treading-app/blob/main/activity-page-screenshot.png)
+
+### Portfolio page
+
+![Image alt](https://github.com/parodiathe/Treading-app/blob/main/portfolio-page-screenshot.png)
+
+### Wallet page
+
+![Image alt](https://github.com/parodiathe/Treading-app/blob/main/wallet-page-screenshot.png)
+
+### Deposit page
+
+![Image alt](https://github.com/parodiathe/Treading-app/blob/main/deposit-page-screenshot.png)
+
+
+
+
+
+
+
+
+
 
 
 
